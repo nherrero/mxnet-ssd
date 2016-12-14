@@ -1,8 +1,13 @@
+import random
+from os.path import basename, join
+
+import cv2
 import mxnet as mx
 import numpy as np
 from timeit import default_timer as timer
 from dataset.testdb import TestDB
 from dataset.iterator import DetIter
+
 
 class Detector(object):
     """
@@ -25,6 +30,7 @@ class Detector(object):
     ctx : mx.ctx
         device to use, if None, use mx.cpu() as default context
     """
+
     def __init__(self, symbol, model_prefix, epoch, data_shape, mean_pixels, \
                  batch_size=1, ctx=None):
         self.ctx = ctx
@@ -109,12 +115,13 @@ class Detector(object):
         thresh : float
             score threshold
         """
-        import matplotlib.pyplot as plt
+        import cv2
         import random
-        plt.imshow(img)
+
         height = img.shape[0]
         width = img.shape[1]
         colors = dict()
+
         for i in range(dets.shape[0]):
             cls_id = int(dets[i, 0])
             if cls_id >= 0:
@@ -126,19 +133,22 @@ class Detector(object):
                     ymin = int(dets[i, 3] * height)
                     xmax = int(dets[i, 4] * width)
                     ymax = int(dets[i, 5] * height)
-                    rect = plt.Rectangle((xmin, ymin), xmax - xmin,
-                                         ymax - ymin, fill=False,
-                                         edgecolor=colors[cls_id],
-                                         linewidth=3.5)
-                    plt.gca().add_patch(rect)
-                    class_name = str(cls_id)
+
+                    color = [c * 255 for c in colors[cls_id]]
+
+                    cv2.rectangle(img, (xmin, ymin), (xmax, ymax), color, 2)
+
                     if classes and len(classes) > cls_id:
                         class_name = classes[cls_id]
-                    plt.gca().text(xmin, ymin - 2,
-                                    '{:s} {:.3f}'.format(class_name, score),
-                                    bbox=dict(facecolor=colors[cls_id], alpha=0.5),
-                                    fontsize=12, color='white')
-        plt.show()
+                        text_size, baseline = cv2.getTextSize(class_name, cv2.FONT_HERSHEY_SIMPLEX, 0.7, 1)
+                        cv2.rectangle(img, (xmin, ymin - 2), (xmin + text_size[0], ymin - 2 - text_size[1]), (0, 0, 0),
+                                      -1)
+                        cv2.putText(img, class_name, (xmin, ymin - 2), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255),
+                                    1)
+
+        cv2.cvtColor(img, cv2.COLOR_RGB2BGR, img)
+        cv2.imshow("img", img)
+        cv2.waitKey(0)
 
     def detect_and_visualize(self, im_list, root_dir=None, extension=None,
                              classes=[], thresh=0.6, show_timer=False):
@@ -157,9 +167,7 @@ class Detector(object):
 
         Returns:
         ----------
-
         """
-        import cv2
         dets = self.im_detect(im_list, root_dir, extension, show_timer=show_timer)
         if not isinstance(im_list, list):
             im_list = [im_list]
@@ -168,3 +176,81 @@ class Detector(object):
             img = cv2.imread(im_list[k])
             img[:, :, (0, 1, 2)] = img[:, :, (2, 1, 0)]
             self.visualize_detection(img, det, classes, thresh)
+
+        return dets
+
+    def store_detections(self, img_name, dets, thresh, classes, root_dir=None):
+        """
+            wrapper for im_detect and visualize_detection
+
+            Parameters:
+            ----------
+            im_list : list of str or str
+                image path or list of image paths
+            root_dir : str or None
+                directory of input images, optional if image path already
+                has full directory information
+            extension : str or None
+                image extension, eg. ".jpg", optional
+
+            Returns:
+            ----------
+        """
+
+        img = cv2.imread(img_name)
+        img_p = img.copy()
+
+        if img:
+
+            height = img.shape[0]
+            width = img.shape[1]
+
+            colors = {}
+
+            crops = []
+            image_crops = []
+
+            for i in range(dets.shape[0]):
+                cls_id = int(dets[i, 0])
+                if cls_id >= 0:
+                    score = dets[i, 1]
+                    if score > thresh:
+                        if cls_id not in colors:
+                            colors[cls_id] = (random.random(), random.random(), random.random())
+
+                        xmin = int(dets[i, 2] * width)
+                        ymin = int(dets[i, 3] * height)
+                        xmax = int(dets[i, 4] * width)
+                        ymax = int(dets[i, 5] * height)
+
+                        #   Get cropped image
+                        image_crops.append(img[ymin:ymax, xmin:xmax].copy())
+
+                        #   Paint crop to image
+                        cv2.rectangle(img, (xmin, ymin), (xmax, ymax), colors[cls_id], 2)
+
+                        #   Add crop to crops vector
+                        crops.append({
+                            "score": score,
+                            "class": classes[cls_id],
+                            "xmin": xmin,
+                            "ymin": ymin,
+                            "xmax": xmax,
+                            "ymax": ymax})
+
+            # Update full JSON information
+            detection_info = {
+                "image_name": img_name,
+                "width": width,
+                "height": height,
+                "crops": crops
+            }
+
+            img_basename = basename(img_name)[:-3]
+
+            #   Store json
+            json_path = join(root_dir, img_basename + '.json')
+
+            #   Store crops
+
+            #   Store painted image
