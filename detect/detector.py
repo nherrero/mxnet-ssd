@@ -1,4 +1,5 @@
 import random
+
 from os.path import basename, join
 
 import cv2
@@ -65,10 +66,13 @@ class Detector(object):
         start = timer()
         detections = self.mod.predict(det_iter).asnumpy()
         time_elapsed = timer() - start
+
         if show_timer:
             print "Detection time for {} images: {:.4f} sec".format(
                 num_images, time_elapsed)
         result = []
+
+
         for i in range(detections.shape[0]):
             det = detections[i, :, :]
             res = det[np.where(det[:, 0] >= 0)[0]]
@@ -179,23 +183,12 @@ class Detector(object):
 
         return dets
 
-    def store_detections(self, img_name, dets, thresh, classes, root_dir=None):
-        """
-            wrapper for im_detect and visualize_detection
+    def valid_detections_json(self, img, dets, thresh):
+        pass
+        # detection_info
 
-            Parameters:
-            ----------
-            im_list : list of str or str
-                image path or list of image paths
-            root_dir : str or None
-                directory of input images, optional if image path already
-                has full directory information
-            extension : str or None
-                image extension, eg. ".jpg", optional
 
-            Returns:
-            ----------
-        """
+    def store_detections(self, img_name, dets, thresh, classes, crops_path, cropped_images_path):
 
         img = cv2.imread(img_name)
         img_p = img.copy()
@@ -230,13 +223,16 @@ class Detector(object):
                         cv2.rectangle(img, (xmin, ymin), (xmax, ymax), colors[cls_id], 2)
 
                         #   Add crop to crops vector
-                        crops.append({
-                            "score": score,
-                            "class": classes[cls_id],
-                            "xmin": xmin,
-                            "ymin": ymin,
-                            "xmax": xmax,
-                            "ymax": ymax})
+                        crops.append(
+                            {
+                                "score": score,
+                                "class": classes[cls_id],
+                                "xmin": dets[i, 2],
+                                "ymin": dets[i, 3],
+                                "xmax": dets[i, 4],
+                                "ymax": dets[i, 5]
+                            }
+                        )
 
             # Update full JSON information
             detection_info = {
@@ -249,8 +245,11 @@ class Detector(object):
             img_basename = basename(img_name)[:-3]
 
             #   Store json
-            json_path = join(root_dir, img_basename + '.json')
+            json_path = join(crops_path, img_basename + '.json')
 
             #   Store crops
+            for n, c in enumerate(image_crops):
+                cv2.imwrite(join(cropped_images_path, "%s_%04d.jpg" % (img_basename, n)))
 
-            #   Store painted image
+            # Store painted image
+            cv2.imwrite(join(cropped_images_path, img_basename + '.jpg'), img_p)
