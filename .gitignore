@@ -4,6 +4,7 @@ data/*
 model/*
 !model/README.md
 cache/*
+.idea/*
 
 # Compiled Object files
 *.slo
