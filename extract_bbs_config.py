@@ -6,9 +6,9 @@ CLASSES = (
     'aeroplane', 'bicycle', 'bird', 'boat', 'bottle', 'bus', 'car', 'cat', 'chair', 'cow', 'diningtable',
            'dog', 'horse', 'motorbike', 'person', 'pottedplant', 'sheep', 'sofa', 'train', 'tvmonitor')
 
-IMAGES_PATH = '/Users/nherrero/Desktop/weapon_images/'
-IMAGES_PATH = '/Users/nherrero/Desktop/animal_images/'
-IMAGES_PATH = '/Users/nherrero/workspace/python/wallapop/wallapop-cv-py/deeplearning/scripts/feature_extraction/clusters/8zapatos'
+IMAGES_PATH = '~/197.speed-boat/'
+# IMAGES_PATH = '/Users/nherrero/Desktop/animal_images/'
+# IMAGES_PATH = '/Users/nherrero/workspace/python/wallapop/wallapop-cv-py/deeplearning/scripts/feature_extraction/clusters/8zapatos'
 OUTPUT_PATH = join(IMAGES_PATH, '__output')
 JSON_PATH = join(OUTPUT_PATH, 'json')
 CROPS_PATH = join(OUTPUT_PATH, 'crops')
