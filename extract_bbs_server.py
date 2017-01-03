@@ -22,10 +22,13 @@ if __name__ == '__main__':
         ctx = mx.cpu()
         print('CPU')
 
+    print(OUTPUT_PATH)
+
     # Create needed folder structure
     if not os.path.exists(OUTPUT_PATH):
         for dir in [OUTPUT_PATH, JSON_PATH, CROPS_PATH, DETECTIONS_PATH]:
             os.makedirs(dir)
+
 
     image_list = [f for f in os.listdir(IMAGES_PATH) if f.endswith('.jpg')]
     shuffle(image_list)
