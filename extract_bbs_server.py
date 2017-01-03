@@ -26,6 +26,7 @@ if __name__ == '__main__':
 
     # Create needed folder structure
     if not os.path.exists(OUTPUT_PATH):
+        print('llego')
         for dir in [OUTPUT_PATH, JSON_PATH, CROPS_PATH, DETECTIONS_PATH]:
             os.makedirs(dir)
 
