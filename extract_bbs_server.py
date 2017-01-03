@@ -39,6 +39,9 @@ if __name__ == '__main__':
 
     for j, dets in enumerate(detector.im_detect(image_path, IMAGES_PATH, EXTENSION, SHOW_TIMER)):
 
+        print(j)
+        print(dets)
+
         img = cv2.imread(join(IMAGES_PATH, image_path[j]))
         image_name = image_path[j][:-4]
         img_dets = img.copy()
