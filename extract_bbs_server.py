@@ -42,7 +42,7 @@ if __name__ == '__main__':
         print(j)
         print(dets)
 
-        img = cv2.imread(image_path)
+        img = cv2.imread(image_path[0])
         image_name = image_path[j][:-4]
         img_dets = img.copy()
 
