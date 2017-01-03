@@ -17,8 +17,10 @@ if __name__ == '__main__':
 
     if GPU_ENABLED:
         ctx = mx.gpu(GPU_ID)
+        print('GPU')
     else:
         ctx = mx.cpu()
+        print('CPU')
 
     # Create needed folder structure
     if not os.path.exists(OUTPUT_PATH):
