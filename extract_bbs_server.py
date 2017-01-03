@@ -25,7 +25,7 @@ if __name__ == '__main__':
     #     for dir in [OUTPUT_PATH, JSON_PATH, CROPS_PATH, DETECTIONS_PATH]:
     #         os.makedirs(dir)
 
-    image_path = ['/home/ubuntu/197.speed-boat/197_0005.jpg']
+    image_path = ['/home/ubuntu/197.speed-boat/197_0006.jpg']
 
     # image_list = [f for f in os.listdir(IMAGES_PATH) if f.endswith('.jpg')]
     # shuffle(image_list)
