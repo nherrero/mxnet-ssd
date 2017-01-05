@@ -49,6 +49,7 @@ if __name__ == '__main__':
 
         #   Filter detections
         for det in dets:
+            print(det.score)
             det = Detection(*det)
             if det.score > DETECTION_THRESH:
                 detections.append(det)
