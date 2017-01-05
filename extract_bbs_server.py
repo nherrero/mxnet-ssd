@@ -26,6 +26,7 @@ if __name__ == '__main__':
     #         os.makedirs(dir)
 
     image_path = ['/home/ubuntu/197.speed-boat/197_0006.jpg']
+    output_path = '/home/ubuntu/197.speed-boat/out/'
 
     # image_list = [f for f in os.listdir(IMAGES_PATH) if f.endswith('.jpg')]
     # shuffle(image_list)
@@ -56,13 +57,13 @@ if __name__ == '__main__':
                 detections.append(det)
 
                 #   Store crop
-                cv2.imwrite(join(CROPS_PATH, image_name + '_crop_%04d.jpg' % c), crop_from_detection(det, img))
+                cv2.imwrite(join(output_path, image_name + '_crop_%04d.jpg' % c), crop_from_detection(det, img))
                 c += 1
 
                 #   Paint detection
                 paint_detection(det, img_dets, [random() * 255 for ch in range(3)])
 
-        cv2.imwrite(join(DETECTIONS_PATH, image_name + '_detections.jpg'), img_dets)
+        cv2.imwrite(join(output_path, image_name + '_detections.jpg'), img_dets)
 
         detection_info = {
             "image_name": image_name,
@@ -71,7 +72,7 @@ if __name__ == '__main__':
             "crops": [det.__dict__ for det in detections]
         }
 
-        with open(join(JSON_PATH, image_name + '.json'), 'w') as fp:
+        with open(join(output_path, image_name + '.json'), 'w') as fp:
             json.dump(detection_info, fp, sort_keys=True, indent=4)
 
     # num_intervals = len(image_list) / BATCH_SIZE + 1
