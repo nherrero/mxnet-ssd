@@ -22,7 +22,7 @@ if __name__ == '__main__':
 
     # Create needed folder structure
     if not os.path.exists(OUTPUT_PATH):
-        for dir in [OUTPUT_PATH, JSON_PATH, CROPS_PATH, DETECTIONS_PATH, NON_DETECTIONS_PATH]:
+        for dir in [OUTPUT_PATH, NON_DETECTIONS_PATH]:
             os.makedirs(dir)
 
     image_list = [f for f in os.listdir(IMAGES_PATH) if f.endswith('.jpg')]
@@ -62,35 +62,17 @@ if __name__ == '__main__':
                 for det in dets:
                     det = Detection(*det)
                     if det.score > DETECTION_THRESH:
-                        detections.append(det)
-
                         class_name = CLASSES[int(det.class_id)]
                         class_path = os.path.join(OUTPUT_PATH, class_name)
 
-                        if not os.path.exists(class_path):
-                            os.makedirs(class_path)
+                        if class_name == "car":
+                            detections.append(det)
+                            if not os.path.exists(class_path):
+                                os.makedirs(class_path)
 
-                        # Store crop
-                        # cv2.imwrite(join(class_path, image_name + '_crop_%04d.jpg' % c), crop_from_detection(det, img))
-                        cv2.imwrite(join(class_path, image_name.jpg), img)
-                        c += 1
+                            cv2.imwrite(join(class_path, image_name.jpg), img)
 
-                        #   Paint detection
-                        paint_detection(det, img_dets, [random() * 255 for ch in range(3)])
-
-                if len(detections) > 0:
-                    cv2.imwrite(join(DETECTIONS_PATH, image_name + '_detections.jpg'), img_dets)
-                    detection_info = {
-                        "image_name": image_name,
-                        "width": img.shape[1],
-                        "height": img.shape[0],
-                        "crops": [det.__dict__ for det in detections]
-                    }
-
-                    with open(join(JSON_PATH, image_name + '.json'), 'w') as fp:
-                        json.dump(detection_info, fp, sort_keys=True, indent=4)
-
-                else:
+                if len(detections) == 0:
                     cv2.imwrite(join(NON_DETECTIONS_PATH, image_name + '.jpg'), img)
 
             else:
