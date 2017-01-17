@@ -64,7 +64,7 @@ def detect():
 
                     #   Store crop
                     crop_name = image_name + '_crop_%04d.jpg' % c
-                    cv2.imwrite(image_name + crop_name, crop_from_detection(det, img))
+                    cv2.imwrite(crop_name, crop_from_detection(det, img))
                     c += 1
 
                     # call clasification API
