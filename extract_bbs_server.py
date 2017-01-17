@@ -90,7 +90,7 @@ def detect():
 
         os.remove(img_path)
 
-    return '\n'.join(probabilities)
+    return '\n'.join(probabilities) + '\n'
 
 
 def randomword(length):
