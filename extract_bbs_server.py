@@ -63,6 +63,7 @@ def detect():
                     detections.append(det)
 
                     #   Store crop
+                    print image_name
                     crop_name = image_name + '_crop_%04d.jpg' % c
                     print join(UPLOAD_FOLDER, image_name + crop_name)
                     cv2.imwrite(join(UPLOAD_FOLDER, image_name + crop_name), crop_from_detection(det, img))
