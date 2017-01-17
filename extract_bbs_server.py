@@ -71,7 +71,7 @@ def detect():
                     # call clasification API
                     url = 'http://localhost:5000/classify?image_file={path}&model_id=animals'.format(path=crop_name.replace('/tmp/', ''))
                     response = requests.get(url)
-                    probabilities.append(str(response.text))
+                    probabilities.append(response.text)
 
                     #   Paint detection
                     # paint_detection(det, img_dets, [random() * 255 for ch in range(3)])
@@ -90,7 +90,7 @@ def detect():
 
         os.remove(img_path)
 
-    return probabilities
+    return str(probabilities)
 
 
 def randomword(length):
