@@ -64,8 +64,10 @@ def detect():
 
                     #   Store crop
                     crop_name = image_name + '_crop_%04d.jpg' % c
+                    print crop_name
                     cv2.imwrite(join(UPLOAD_FOLDER, image_name + crop_name), crop_from_detection(det, img))
                     c += 1
+                    print crop_name
 
                     # call clasification API
                     print 'Calling second endpoint...'
