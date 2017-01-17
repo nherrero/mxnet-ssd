@@ -15,6 +15,7 @@ import random
 import string
 import requests
 import shutil
+import os
 
 
 UPLOAD_FOLDER = '/tmp/'
@@ -86,6 +87,8 @@ def detect():
 
             # with open(join(output_path, image_name + '.json'), 'w') as fp:
             #     json.dump(detection_info, fp, sort_keys=True, indent=4)
+
+        os.remove(img_path)
 
     return probabilities
 
