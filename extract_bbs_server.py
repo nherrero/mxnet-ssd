@@ -36,6 +36,9 @@ def test():
 @app.route('/detect', methods=['GET', 'POST'])
 def detect():
     if request.method == 'GET':
+
+        probabilities = []
+
         if 'image_url' in request.args:
             image_url = request.args.get('image_url')
             img_path = download_image(image_url)
@@ -60,8 +63,15 @@ def detect():
                     detections.append(det)
 
                     #   Store crop
-                    cv2.imwrite(join(UPLOAD_FOLDER, image_name + '_crop_%04d.jpg' % c), crop_from_detection(det, img))
+                    crop_name = image_name + '_crop_%04d.jpg' % c
+                    cv2.imwrite(join(UPLOAD_FOLDER, image_name + crop_name), crop_from_detection(det, img))
                     c += 1
+
+                    # call clasification API
+                    print 'Calling second endpoint...'
+                    response = requests.get('localhost:5000/classify?image_file={path}&model_id=animals'.format(path=UPLOAD_FOLDER + crop_name))
+                    print response.text
+                    probabilities.append(response.text)
 
                     #   Paint detection
                     # paint_detection(det, img_dets, [random() * 255 for ch in range(3)])
@@ -78,7 +88,7 @@ def detect():
             # with open(join(output_path, image_name + '.json'), 'w') as fp:
             #     json.dump(detection_info, fp, sort_keys=True, indent=4)
 
-    return ''  # TODO
+    return probabilities
 
 
 def randomword(length):
@@ -99,8 +109,10 @@ def start(app):
 
     if GPU_ENABLED:
         ctx = mx.gpu(GPU_ID)
+        print('Using GPU')
     else:
         ctx = mx.cpu()
+        print('Using CPU')
 
     detector = get_detector(NETWORK, PREFIX, EPOCH, DATA_SHAPE, MEAN_RGB, ctx, NMS_THRESH, FORCE_NMS)
 
