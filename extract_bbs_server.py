@@ -63,18 +63,13 @@ def detect():
                     detections.append(det)
 
                     #   Store crop
-                    print image_name
                     crop_name = image_name + '_crop_%04d.jpg' % c
-                    print join(UPLOAD_FOLDER, image_name + crop_name)
-                    cv2.imwrite(join(UPLOAD_FOLDER, image_name + crop_name), crop_from_detection(det, img))
+                    cv2.imwrite(image_name + crop_name, crop_from_detection(det, img))
                     c += 1
 
                     # call clasification API
-                    print 'Calling second endpoint...'
                     url = 'http://localhost:5000/classify?image_file={path}&model_id=animals'.format(path=crop_name.replace('/tmp/', ''))
-                    print 'url: ' + url
                     response = requests.get(url)
-                    print response.text
                     probabilities.append(response.text)
 
                     #   Paint detection
