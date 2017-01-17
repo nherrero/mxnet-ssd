@@ -71,7 +71,7 @@ def detect():
 
                     # call clasification API
                     print 'Calling second endpoint...'
-                    url = 'http://localhost:5000/classify?image_file={path}&model_id=animals'.format(path=crop_name)
+                    url = 'http://localhost:5000/classify?image_file={path}&model_id=animals'.format(path=crop_name.replace('/tmp/', ''))
                     print 'url: ' + url
                     response = requests.get(url)
                     print response.text
