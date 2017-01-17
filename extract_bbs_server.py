@@ -69,7 +69,9 @@ def detect():
 
                     # call clasification API
                     print 'Calling second endpoint...'
-                    response = requests.get('http://localhost:5000/classify?image_file={path}&model_id=animals'.format(path=UPLOAD_FOLDER + crop_name))
+                    url = 'http://localhost:5000/classify?image_file={path}&model_id=animals'.format(path=UPLOAD_FOLDER + crop_name)
+                    print 'url: ' + url
+                    response = requests.get(url)
                     print response.text
                     probabilities.append(response.text)
 
