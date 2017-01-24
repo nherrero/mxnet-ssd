@@ -62,7 +62,8 @@ if __name__ == '__main__':
                     detections.append(det)
 
                     #   Store crop
-                    cv2.imwrite(join(CROPS_PATH, image_name + '_crop_%04d.jpg' % c), crop_from_detection(det, img))
+                    cv2.imwrite(join(CROPS_PATH, image_name + '_crop_%04d.jpg' % c),
+                                crop_from_detection(det, cv2.resize(img, (256, 256), interpolation=cv2.INTER_CUBIC)))
                     c += 1
 
                     #   Paint detection
