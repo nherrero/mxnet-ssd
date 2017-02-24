@@ -11,9 +11,10 @@ CLASSES = ('aeroplane', 'bicycle', 'bird', 'boat',
            'cow', 'diningtable', 'dog', 'horse',
            'motorbike', 'person', 'pottedplant',
            'sheep', 'sofa', 'train', 'tvmonitor')
+# NETWORK, PREFIX, EPOCH, DATA_SHAPE, MEAN_RGB, ctx, NMS_THRESH, FORCE_NMS
 
-def get_detector(net, prefix, epoch, data_shape, mean_pixels, ctx,
-                 nms_thresh=0.5, force_nms=True):
+
+def get_detector(net, prefix, epoch, data_shape, mean_pixels, ctx, nms_thresh=0.5, force_nms=True):
     """
     wrapper for initialize a detector
 

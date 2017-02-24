@@ -1,5 +1,3 @@
-import json
-
 from flask import Flask, request
 from flask_cors import CORS
 
@@ -10,7 +8,6 @@ from demo import get_detector
 from detect.detection import Detection, crop_from_detection
 from extract_bbs_config import GPU_ENABLED, GPU_ID, IMAGES_PATH, EPOCH, NETWORK, DATA_SHAPE, NMS_THRESH, \
     FORCE_NMS, MEAN_RGB, PREFIX, EXTENSION, SHOW_TIMER, DETECTION_THRESH
-from os.path import join
 import random
 import string
 import requests
@@ -69,28 +66,13 @@ def detect():
                     c += 1
 
                     # call clasification API
-                    url = 'http://localhost:5000/classify?image_file={path}&model_id=animals'.format(path=crop_name.replace('/tmp/', ''))
-                    response = requests.get(url)
-                    probabilities.append(response.text)
-
-                    #   Paint detection
-                    # paint_detection(det, img_dets, [random() * 255 for ch in range(3)])
-
-            # cv2.imwrite(join(output_path, image_name + '_detections.jpg'), img_dets)
-
-            # detection_info = {
-            #     "image_name": image_name,
-            #     "width": img.shape[1],
-            #     "height": img.shape[0],
-            #     "crops": [det.__dict__ for det in detections]
-            # }
-
-            # with open(join(output_path, image_name + '.json'), 'w') as fp:
-            #     json.dump(detection_info, fp, sort_keys=True, indent=4)
+                    # url = 'http://localhost:5000/classify?image_file={path}&model_id=animals'.format(path=crop_name.replace('/tmp/', ''))
+                    # response = requests.get(url)
+                    # probabilities.append(response.text)
 
         os.remove(img_path)
 
-    return '\n'.join(probabilities) + '\n'
+    return '\n'.join(detections) + '\n'
 
 
 def randomword(length):
