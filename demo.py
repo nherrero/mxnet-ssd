@@ -36,6 +36,15 @@ def get_detector(net, prefix, epoch, data_shape, mean_pixels, ctx, nms_thresh=0.
         force suppress different categories
     """
     sys.path.append(os.path.join(os.getcwd(), 'symbol'))
+
+    print('net: {n}'.format(n=net))
+    print('prefix: {n}'.format(n=prefix))
+    print('epoch: {n}'.format(n=epoch))
+    print('data_shape: {n}'.format(n=data_shape))
+    print('mean_pixels: {n}'.format(n=mean_pixels))
+    print('nms_thresh: {n}'.format(n=nms_thresh))
+    print('force_nms: {n}'.format(n=force_nms))
+
     net = importlib.import_module("symbol_" + net) \
         .get_symbol(len(CLASSES), nms_thresh, force_nms)
     detector = Detector(net, prefix + "_" + str(data_shape), epoch, \
