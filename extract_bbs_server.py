@@ -45,6 +45,10 @@ def detect():
             return 'error'
         for j, dets in enumerate(app.dtr.im_detect(image_path, IMAGES_PATH, EXTENSION, SHOW_TIMER)):
 
+            print('Image index: {ii}'.format(ii=j))
+            print('Detections: {d}'.format(d=dets))
+            print('Detections shape: {ds}'.format(ds=dets.shape))
+
             img = cv2.imread(image_path[0])
             image_name = image_path[j][:-4]
             img_dets = img.copy()
@@ -54,6 +58,9 @@ def detect():
 
             #   Filter detections
             for det in dets:
+
+                print('Detection: {d}\n{t}'.format(d=det, t=type(det)))
+                print('Detection shape: {ds}'.format(ds=det.shape))
 
                 det = Detection(*det)
                 print(det.score)
