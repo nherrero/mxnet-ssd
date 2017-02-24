@@ -58,7 +58,7 @@ def detect():
                 det = Detection(*det)
                 print(det.score)
                 if det.score > DETECTION_THRESH:
-                    detections.append(det)
+                    detections.append(str((det.class_id, det.score)))
 
                     #   Store crop
                     crop_name = image_name + '_crop_%04d.jpg' % c

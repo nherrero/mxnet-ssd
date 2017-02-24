@@ -59,7 +59,7 @@ if __name__ == '__main__':
             for det in dets:
                 det = Detection(*det)
                 if det.score > DETECTION_THRESH:
-                    detections.append(str((det.class_id, det.score)))
+                    detections.append(det)
 
                     #   Store crop
                     cv2.imwrite(join(CROPS_PATH, image_name + '_crop_%04d.jpg' % c), crop_from_detection(det, img))
